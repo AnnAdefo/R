@@ -1,0 +1,45 @@
+---
+title: "Task 5"
+author: "Sidneva Anna"
+date: "23 11 2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+I use data about a single payment document in Moscow districts. For this work, I took a sample of values for March 2016. 
+
+Next, I will calculate the median and 5-number summary (quantile) for the two selected indicators and build a plot.
+```{r echo=TRUE, fig.height=2.5, fig.align='center', eval=TRUE}
+library(readxl)
+payment<-read_xlsx('E:/payment_msk.xlsx',sheet=1)
+library(comprehenr)
+debt<-payment$DebtQuantityUPD[c(1:141)]
+debt_q<-to_vec(for(i in debt)as.double(i))
+median(debt_q)
+quantile(debt_q)
+library(ggplot2)
+data_pay<-data.frame(y=debt_q)
+ggplot(data_pay)+geom_boxplot(aes(x = "Median \n& quantiles",y = debt_q))+labs(x = "Quantity",y = "Quantity Debt")
+quantity1<-payment$CurrentQuantityUPD[c(1:141)]
+pay<-to_vec(for(i in quantity1)as.double(i))
+median(pay)
+quantile(pay)
+```
+The next step is to calculate the mean and standard deviation for both indicators
+```{r echo=TRUE, fig.height=2.5, fig.align='center', eval=TRUE}
+mean(debt_q)
+sd(debt_q)
+mean(pay)
+sd(pay)
+library(Hmisc)
+mean_sdl(debt_q)
+mean_sdl(pay)
+library(comprehenr)
+debt_q<-to_vec(for(i in debt)as.double(i))
+library(ggplot2)
+data_pay<-data.frame(y=debt_q)
+ggplot(data_pay)+stat_summary(geom='pointrange',fun.data=mean_sdl,fun.args=list(mult=1),aes(x='Mean\n&standard deviation',y=debt_q)+labs(x='Quantity',y='Quantity Debt'))
+```
+
