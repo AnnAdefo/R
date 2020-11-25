@@ -1,36 +1,29 @@
+
 library(readxl)
 payment1<-read_xlsx('E:/payment_msk.xlsx',sheet=1)
-library(comprehenr)
-debt<-payment1$DebtQuantityUPD[c(1:141)]
-debt_q<-to_vec(for(i in debt)as.double(i))
+str(payment1)
+debt_q<-as.numeric(payment1$DebtQuantityUPD)
 median(debt_q)
 quantile(debt_q)
+pay<-as.numeric(payment1$CurrentQuantityUPD)
+median(pay)
+quantile(pay)
 library(ggplot2)
 data_pay<-data.frame(y=debt_q)
 ggplot(data_pay)+geom_boxplot(aes(x = "Median \n& quantiles",y = debt_q))+labs(x = "Quantity",y = "Quantity Debt")
-quantity1<-payment$CurrentQuantityUPD[c(1:141)]
-pay<-to_vec(for(i in quantity1)as.double(i))
-median(pay)
-quantile(pay)
+data_pay1<-data.frame(y=pay)
+ggplot(data_pay1)+geom_boxplot(aes(x = "Median \n& quantiles",y = pay))+labs(x = "Quantity",y = "Quantity UPD")
 mean(debt_q)
 sd(debt_q)
 mean(pay)
 sd(pay)
 library(Hmisc)
 mean_sdl(debt_q)
+mean_sdl(pay)
 library(ggplot2)
 data_pay<-data.frame(y=debt_q)
-ggplot(data_pay)+stat_summary(geom='pointrange',fun.data=mean_sdl,fun.args=list(mult=1),aes(x='Mean\n&standard deviation',y=debt_q)+labs(x='Quantity',y='Quantity Debt'))
+ggplot(data=data_pay)+stat_summary(geom='pointrange',fun.data=mean_sdl,fun.args=list(mult=1),aes(x='Mean\n&standard deviation',y=debt_q))+labs(x='Quantity',y='Quantity Debt')
+data_pay1<-data.frame(y=pay)
+ggplot(data=data_pay1)+stat_summary(geom='pointrange',fun.data=mean_sdl,fun.args=list(mult=1),aes(x='Mean\n&standard deviation',y=pay))+labs(x='Quantity',y='Quantity UPD')
 cor(debt_q,pay,method="pearson")
-
-
-
-
-
-
-
-
-
-
-
-
+cor(debt_q,pay,method="spearman")
